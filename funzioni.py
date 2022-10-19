@@ -1,6 +1,6 @@
 import csv
-import requests
-import zipfile
+
+
 
 def estrai_ruote(filecsv):
 
@@ -21,19 +21,19 @@ def estrai_ruote(filecsv):
             for i in temp:
                 spamwriter.writerow(i)
 
-class numero:
+def scrivi_su_csv(nomefile, list):
 
-    def __init__(self, n):
+    with open(nomefile, 'w', newline='') as csvfile:
+        spamwriter = csv.writer(csvfile)
+        for i in list:
+            spamwriter.writerow(i)
 
-        self.ritardo = 0
-        self.numero = int(n)
+def leggi_da_csv(nomefile):
+    temp = []
+    with open(nomefile, newline='') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=",")
+        for row in spamreader:
+            temp.append(row)
 
-    def calcolo_ritardo(self, df):
-        ritardo = 0
-        posto = ["1", "2", "3", "4", "5"]
-        for j in range(len(df)):
-            for i in posto:
-                if self.numero in df[i][j]:
-                    ritardo = 1
-                else:
+    return temp
 
