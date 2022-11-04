@@ -9,3 +9,6 @@ print(comb)
 
 comb = list(combinations_with_replacement(numeri, 2))
 print(comb)
+
+a = 1
+print(len(a))
