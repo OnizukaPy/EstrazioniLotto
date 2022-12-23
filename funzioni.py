@@ -1,13 +1,12 @@
 import csv
 import requests
 import zipfile
-import csv
 
 
 def estrai_ruote(filecsv):
 
     #index = [["Data", "Ruota", "1","2","3","4","5"]]
-    ruote = ["BA", "FI", "MI", "NA", "PA", "RO", "TO", "VE", "NZ"]
+    ruote = ["BA", "FI", "MI", "NA", "PA", "RM", "TO", "VE"]
 
     for r in ruote:
         #print(r)
@@ -45,19 +44,20 @@ def update_archivio():
     # download archivio
     url = "https://www.igt.it/STORICO_ESTRAZIONI_LOTTO/storico.zip"
     r = requests.get(url)
-    with open("storico.zip", "wb") as zip:
+    filename = url.split('/')[-1].split('.')[0]
+    with open(filename+'.zip', "wb") as zip:
         zip.write(r.content)
 
     # estrazione del file zip
-    f = zipfile.ZipFile("storico.zip")
+    f = zipfile.ZipFile(filename+'.zip')
     f.extractall()
     # elaborazione delle singole ruote dal file generale
-    with open('storico.txt', 'r') as infile, open('storico.csv', 'w') as outfile:
+    with open(filename+'.txt', 'r') as infile, open(filename+'.csv', 'w') as outfile:
         stripped = (line.strip() for line in infile)
         lines = (line.split(",") for line in stripped if line)
         writer = csv.writer(outfile)
         writer.writerows(lines)
         
-    estrai_ruote('storico.csv')
+    estrai_ruote(filename+'.csv')
 
 update_archivio()
