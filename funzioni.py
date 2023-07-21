@@ -5,12 +5,14 @@ import zipfile
 import os
 import sys
 
+from time import sleep
+
 PATH = sys.path[0] + '/'
 PATH_ESTR = PATH + 'estrazioni/'
 def estrai_ruote(filecsv):
     
     #index = [["Data", "Ruota", "1","2","3","4","5"]]
-    ruote = ["BA", "FI", "MI", "NA", "PA", "RM", "TO", "VE"]
+    ruote = ["BA", "CA", "FI", "GE", "MI", "NA", "PA", "RM", "TO", "VE", "RN"]
 
     for r in ruote:
         #print(r)
@@ -67,3 +69,10 @@ def update_archivio():
     estrai_ruote(PATH_ESTR+filename+'.csv')
 
 update_archivio()
+
+def progress(num=0, den=100, width=30):
+    percent = num / den * 100
+    left = width * num // den
+    right = width - left
+    print('\r[', '#' * left, ' ' * right, ']',
+          f' {percent: .0f}%', sep='', end='', flush=True)
