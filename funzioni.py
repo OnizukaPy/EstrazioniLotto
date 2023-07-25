@@ -71,6 +71,9 @@ def update_archivio():
 update_archivio()
 
 def progress(num=0, den=100, width=30):
+    num = int(num)
+    den = int(den)
+    width = int(width)
     percent = num / den * 100
     left = width * num // den
     right = width - left
