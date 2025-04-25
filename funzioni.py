@@ -7,7 +7,9 @@ import sys
 
 from time import sleep
 
-PATH = sys.path[0] + '/'
+# salviamo il path della cartella corrente
+# in modo da non doverlo scrivere ogni volta
+PATH = './'
 PATH_ESTR = PATH + 'estrazioni/'
 def estrai_ruote(filecsv):
     
@@ -52,6 +54,14 @@ def update_archivio():
     url = "https://www.igt.it/STORICO_ESTRAZIONI_LOTTO/storico.zip"
     r = requests.get(url)
     filename = url.split('/')[-1].split('.')[0]
+    # creazione della cartella estrazioni se non esiste
+    if not os.path.exists(PATH_ESTR):
+        os.makedirs(PATH_ESTR)
+    # creazione del file zip
+    # se esiste lo cancella
+    if os.path.exists(PATH_ESTR+filename+'.zip'):
+        os.remove(PATH_ESTR+filename+'.zip')
+    # scrittura del file zip
     with open(PATH_ESTR+filename+'.zip', "wb") as zip:
         zip.write(r.content)
 
