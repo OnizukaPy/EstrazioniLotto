@@ -1,5 +1,6 @@
 from itertools import permutations
 import numpy as np
+import Models.Lottomatica as Lottomatica
 
 # funzione per dire quando e' uscito un numero
 def calculate_optputs_from_df(df, numero): 
@@ -48,3 +49,15 @@ def calculate_delay_from_df(df, numero):
     delays = np.insert(delays, 0, 0)
 
     return delays
+
+# funzione per prevedere l'ucita in base ad una spia
+def calcola_uscita_da_spia(spia, ruota, n_estr=20):
+    temp = Lottomatica.Lotto()
+    df_temp = temp.carica_estrazioni(ruota)
+    temp.carica_numero([spia], df_temp, n_estr)
+    #print(f"spia: {spia}, n_estr: {n_estr}")
+    # calcoliamo le uscite
+    x = int(temp.elenco_uscite[-1]) - 1
+    #print(f"uscita: {temp.elenco_uscite[-1]} uscita -1 : {x}")
+    #print(f"return: {len(df_temp) - x}")
+    return len(df_temp) - x
