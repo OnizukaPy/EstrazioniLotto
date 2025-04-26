@@ -3,14 +3,11 @@ import requests
 import zipfile
 
 import os
-import sys
-
-from time import sleep
 
 # salviamo il path della cartella corrente
 # in modo da non doverlo scrivere ogni volta
-PATH = './'
-PATH_ESTR = PATH + 'estrazioni/'
+from Lib.Path import PATH, PATH_ESTR
+
 def estrai_ruote(filecsv):
     
     #index = [["Data", "Ruota", "1","2","3","4","5"]]
@@ -77,8 +74,6 @@ def update_archivio():
         writer.writerows(lines)
         
     estrai_ruote(PATH_ESTR+filename+'.csv')
-
-update_archivio()
 
 def progress(num=0, den=100, width=30):
     num = int(num)
