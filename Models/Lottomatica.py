@@ -15,6 +15,26 @@ class Lotto:
         self.numero = None
         self.path = path
 
+        # inizializziamo le variabili
+        self.statistiche = None
+        self.df_trend = None
+        self.previsione = None
+        self.n_estr = None
+        self.totale_estrazioni = np.nan
+        self.elenco_uscite = np.nan
+        self.n_uscite = np.nan
+
+        self.frequenze = np.nan
+        self.ultima_frequenza = np.nan
+        self.ritardi = np.nan
+        self.ritardo_attuale = np.nan
+        self.ritardo_massimo = np.nan
+        self.ultimo_ritardo = np.nan
+        self.scompensazioni = np.nan
+        self.ultima_scompensazione = np.nan
+        self.scompensazione_attuale = np.nan
+        self.spia_num, self.spia_rip, self.spia_estr = np.nan, np.nan, np.nan
+
     def carica_estrazioni(self, ruota):
         """Carica le estrazioni di una ruota in un dataframe"""
         r = self.path+ruota+'.csv'
@@ -61,16 +81,7 @@ class Lotto:
             self.spia_num, self.spia_rip = self.spia()
             # salviamo le statistiche in un dizionario
         else:
-            self.frequenze = np.nan
-            self.ultima_frequenza = np.nan
-            self.ritardi = np.nan
-            self.ritardo_attuale = np.nan
-            self.ritardo_massimo = np.nan
-            self.ultimo_ritardo = np.nan
-            self.scompensazioni = np.nan
-            self.ultima_scompensazione = np.nan
-            self.scompensazione_attuale = np.nan
-            self.spia_num, self.spia_rip, self.spia_estr = np.nan, np.nan, np.nan
+
             print(f'{self.numero}, non è mai uscito')
 
         self.statistiche = {
