@@ -53,11 +53,12 @@ def calculate_delay_from_df(df, numero):
 # funzione per prevedere l'ucita in base ad una spia
 def calcola_uscita_da_spia(spia, ruota, n_estr=20):
     temp = Lottomatica.Lotto()
-    df_temp = temp.carica_estrazioni(ruota)
-    temp.carica_numero([spia], df_temp, n_estr)
+    temp.set_ruota(ruota)
+    temp.load_estrazioni()
+    temp.load_number_statistics([spia], n_estr)
     #print(f"spia: {spia}, n_estr: {n_estr}")
     # calcoliamo le uscite
-    x = int(temp.elenco_uscite[-1]) - 1
+    x = int(temp._elenco_uscite[-1]) - 1
     #print(f"uscita: {temp.elenco_uscite[-1]} uscita -1 : {x}")
     #print(f"return: {len(df_temp) - x}")
-    return len(df_temp) - x
+    return len(temp.get_estrazioni()) - x
