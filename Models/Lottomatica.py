@@ -20,7 +20,7 @@ class Lotto:
         self._elenco_uscite = np.nan
         self._n_uscite = np.nan
         self._frequenze = np.nan
-        self._ultima_frequenza = np.nan
+        self._frequenza_attuale = np.nan
         self._ritardi = np.nan
         self._ritardo_attuale = np.nan
         self._ritardo_massimo = np.nan
@@ -82,7 +82,7 @@ class Lotto:
             # il vettore delle frequenze e' dato dal vettore del numero di uscite diviso il vettore dell'indice del vettore stesso + 1
             self._frequenze = self._elenco_uscite / (np.arange(len(self._elenco_uscite))+1)
             # la frequenza media (ultima frequenza o frequenza attuale) e' data dal totale delle estrazioni diviso il numero di uscite
-            self._ultima_frequenza = round(float(self._totale_estrazioni/self._n_uscite), 2)
+            self._frequenza_attuale = round(float(self._totale_estrazioni/self._n_uscite), 2)
             # l'elenco dei ritardi e' dato dal vettore dei ritardi
             self._ritardi = Lfn.calculate_delay_from_df(self._df, self._numero)
             # il ritardo attuale e' dato dalla differenza tra il totale delle estrazioni e l'indice l'ultima uscita
@@ -95,7 +95,7 @@ class Lotto:
             self._scompensazioni = self._ritardi - self._frequenze
             # calcoliamo la scompensazione attuale e l'ultima scompensazione
             self._ultima_scompensazione = self._scompensazioni.sum()
-            self._scompensazione_attuale = self._ultima_scompensazione + (self._ritardo_attuale - self._ultima_frequenza)     
+            self._scompensazione_attuale = self._ultima_scompensazione + (self._ritardo_attuale - self._frequenza_attuale)     
             # calcoliamo le spie
             self._spia_num, self._spia_rip = self.set_spia_numbers()
             # salviamo le statistiche in un dizionario
@@ -108,7 +108,7 @@ class Lotto:
             'numero': self._numero,
             'n_uscite': self._n_uscite,
             'totale_estrazioni': self._totale_estrazioni,
-            'ultima_frequenza': self._ultima_frequenza,
+            'frequenza_attuale': self._frequenza_attuale,
             'ritardo_attuale': self._ritardo_attuale,
             'ritardo_massimo': self._ritardo_massimo,
             'ultimo_ritardo': self._ultimo_ritardo,
@@ -132,8 +132,8 @@ class Lotto:
         pf = pd.DataFrame(columns=['n_spia', 'rip'])
         pf['n_spia'], pf['rip'] = np.unique(t.flatten(), return_counts=True)
         pf.sort_values(by=['rip'], inplace=True)
-        u, c = pf.iloc[-1]
-        return u, c
+        spia, rip = pf.iloc[-1]
+        return spia, rip
     
     def calculate_zigzag_indicator(self, percentage):
         """
@@ -186,7 +186,7 @@ class Lotto:
             fn.plot_graph(self._df_trend[['close', 'SMA_10', 'SMA_30']])
         #print(self.df_trend.columns)
 
-    def get_forecast(self):
+    def load_forecast(self):
 
         #temp = self.carica_estrazioni(ruota)
         df = pd.DataFrame()
@@ -200,7 +200,7 @@ class Lotto:
             df = pd.concat([df, nuovo_df], ignore_index=True)
             #df = df.append(self.statistiche, ignore_index=True)
         
-        df = df[(df['ritardo_attuale'] < 15) & (df['scompensazione_attuale'] < 0) & (df['trend'] == 'F')].sort_values(by='ultima_frequenza', ascending=False)
+        df = df[(df['ritardo_attuale'] < df['frequenza_attuale']) & (df['scompensazione_attuale'] < 0) & (df['trend'] == 'F')].sort_values(by='frequenza_attuale', ascending=False)
         self._previsione = df['numero'].values
         # stampiamo le previsioni con un ciclo for
         lista = []
