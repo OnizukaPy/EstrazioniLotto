@@ -42,7 +42,7 @@ class Lotto:
         """Setta la ruota"""
         self._ruota = ruota
 
-    def load_estrazioni(self):
+    def set_estrazioni(self):
         """Carica le estrazioni di una ruota in un dataframe"""
         r = self._path+self._ruota+'.csv'
         estrazioni = fn.leggi_da_csv(r)
@@ -56,15 +56,22 @@ class Lotto:
         """Restituisce il dataframe delle estrazioni"""
         return self._df
     
-    def get_uscite(self):
-        """Restituisce il numero di uscite"""
-        return self._n_uscite
-
-    def get_spia(self):
+    def set_spia_numbers(self):
+        t = np.array([])
+        for i in self._elenco_uscite:
+            i = int(i) - 2
+            t = np.append(t, self._df.iloc[i-self._n_estr:i, 2:].values)
+        pf = pd.DataFrame(columns=['n_spia', 'rip'])
+        pf['n_spia'], pf['rip'] = np.unique(t.flatten(), return_counts=True)
+        pf.sort_values(by=['rip'], inplace=True)
+        spia, rip = pf.iloc[-1]
+        return spia, rip
+    
+    def get_spia_numbers(self):
         """Restituisce la spia"""
         return self._spia_num, self._spia_rip
 
-    def load_number_statistics(self, numero, n_estr=10):
+    def set_number_statistics(self, numero, n_estr=10):
         """
         Elabora le informazioni statistiche sul numero e sui numeri inseiriti
         Il numero va inserito come [] di numeri interi
@@ -118,23 +125,20 @@ class Lotto:
             'spia_rip': self._spia_rip,
             'spia_estr': self._n_estr
         }
-        
+    
+    def get_uscite(self):
+        """Restituisce il numero di uscite"""
+        return self._n_uscite
+    
+    def get_statistics(self):
+        """Restituisce le statistiche"""
+        return self._statistiche
+    
     def print_statistics(self):
         
         for k, v in self._statistiche.items():
             print(f'{k}: {v}')
 
-    def set_spia_numbers(self):
-        t = np.array([])
-        for i in self._elenco_uscite:
-            i = int(i) - 2
-            t = np.append(t, self._df.iloc[i-self._n_estr:i, 2:].values)
-        pf = pd.DataFrame(columns=['n_spia', 'rip'])
-        pf['n_spia'], pf['rip'] = np.unique(t.flatten(), return_counts=True)
-        pf.sort_values(by=['rip'], inplace=True)
-        spia, rip = pf.iloc[-1]
-        return spia, rip
-    
     def calculate_zigzag_indicator(self, percentage):
         """
         Calcola il grafico a zigzag
@@ -154,8 +158,7 @@ class Lotto:
         for point in zigzag_result:
             index, value, pivot_type = point
             timestamp = self._df_trend["close"].iloc[index]
-            print(f"Indice: {index}, Timestamp: {timestamp}, Valore: {value}, Tipo: {pivot_type}")
-        
+            print(f"Indice: {index}, Timestamp: {timestamp}, Valore: {value}, Tipo: {pivot_type}")   
 
     def calculate_trend(self):
 
@@ -194,7 +197,7 @@ class Lotto:
         # calcoliamo le previsioni
         for i in range(1, 91):
 
-            self.load_number_statistics([i])
+            self.set_number_statistics([i])
             self.calculate_trend()
             nuovo_df = pd.DataFrame([self._statistiche])
             df = pd.concat([df, nuovo_df], ignore_index=True)
@@ -202,9 +205,10 @@ class Lotto:
         
         df = df[(df['ritardo_attuale'] < df['frequenza_attuale']) & (df['scompensazione_attuale'] < 0) & (df['trend'] == 'F')].sort_values(by='frequenza_attuale', ascending=False)
         self._previsione = df['numero'].values
-        # stampiamo le previsioni con un ciclo for
-        lista = []
-        for i in range(len(self._previsione)):
-            lista.append(self._previsione[i])
-        print(f"i numeri da giocare su {self._ruota} sono: {lista}")
+        # stampiamo le previsioni 
+        print(f"i numeri da giocare su {self._ruota} sono: {self._previsione.tolist()}")
         #return f"i numeri da giocare su {ruota} sono: {self.previsione}"
+
+    def get_forecast(self):
+        """Restituisce le previsioni"""
+        return self._previsione.tolist()

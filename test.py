@@ -21,17 +21,17 @@ dataframe = pd.DataFrame(columns=['Ambi', 'uscite', 'Spia10', 'rip10', 'tra10','
 n = Lottomatica.Lotto()
 count = 1
 n.set_ruota('MI')
-n.load_estrazioni()
+n.set_estrazioni()
 for i in ambi:
     i = list(map(int, i))
     #print(f"Coppia di numeri: {i}")
-    n.load_number_statistics(i, 10)
+    n.set_number_statistics(i, 10)
     n_uscite = n.get_uscite()
-    spia10, rip10 = n.get_spia()
+    spia10, rip10 = n.get_spia_numbers()
     # calcoliamo il ritardo dell'uscita della spia (se è negativa significa che è in ritardo)
     tra10 = 10 - Lfn.calcola_uscita_da_spia(spia10, 'MI', 10)
-    n.load_number_statistics(i, 20)
-    spia20, rip20 = n.get_spia()
+    n.set_number_statistics(i, 20)
+    spia20, rip20 = n.get_spia_numbers()
     # calcoliamo il ritardo dell'uscita della spia (se è negativa significa che è in ritardo)
     tra20 = 20 - Lfn.calcola_uscita_da_spia(spia20, 'MI', 20)
 

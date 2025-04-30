@@ -54,8 +54,8 @@ def calculate_delay_from_df(df, numero):
 def calcola_uscita_da_spia(spia, ruota, n_estr=20):
     temp = Lottomatica.Lotto()
     temp.set_ruota(ruota)
-    temp.load_estrazioni()
-    temp.load_number_statistics([spia], n_estr)
+    temp.set_estrazioni()
+    temp.set_number_statistics([spia], n_estr)
     #print(f"spia: {spia}, n_estr: {n_estr}")
     # calcoliamo le uscite
     x = int(temp._elenco_uscite[-1]) - 1
