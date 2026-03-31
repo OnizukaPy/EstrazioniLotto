@@ -152,7 +152,10 @@ def plot_graph(pf):
 def update_archivio():
     
     # download archivio
-    url = "https://www.igt.it/STORICO_ESTRAZIONI_LOTTO/storico.zip"
+    """ 
+    https://www.brightstarlottery.it/STORICO_ESTRAZIONI_LOTTO/storico.zip
+    """
+    url = "https://www.brightstarlottery.it/STORICO_ESTRAZIONI_LOTTO/storico.zip"
     r = requests.get(url)
     filename = url.split('/')[-1].split('.')[0]
     # creazione della cartella estrazioni se non esiste
