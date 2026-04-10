@@ -18,6 +18,12 @@ update = input("Vuoi aggiornare l'archivio? (s/n): ").lower()
 if update == 's':
     # scarichiamo l'archivio
     fn.update_archivio()
+    
+# chiediamo se vuoi continuare oppure chiudere il programma
+cont = input("Vuoi continuare? (s/n): ").lower()
+if cont != 's':
+    print("Programma chiuso.")
+    exit()
 
 ruota = "MI"
 """ ruote = Rt.RUOTE
